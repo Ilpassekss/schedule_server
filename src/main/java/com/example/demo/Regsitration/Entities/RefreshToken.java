@@ -16,7 +16,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "users_token")
 public class RefreshToken {
 
-
     private String id;
     @Indexed(unique = true)
     private String userEmail;

@@ -3,7 +3,6 @@ package com.example.demo.Regsitration.Services;
 import com.example.demo.Regsitration.Entities.Role;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 

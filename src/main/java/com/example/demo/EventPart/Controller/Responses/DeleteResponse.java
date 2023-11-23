@@ -1,5 +1,4 @@
-package com.example.demo.Regsitration.Controllers.Responses;
-
+package com.example.demo.EventPart.Controller.Responses;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +9,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BadResponse extends Response{
-    private String response = Response.BAD_RESP;
+public class DeleteResponse extends ActivityResponses{
+
+    private String userID;
+
+
+
 }

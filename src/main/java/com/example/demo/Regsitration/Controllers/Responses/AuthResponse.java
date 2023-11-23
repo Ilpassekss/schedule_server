@@ -13,6 +13,6 @@ public class AuthResponse extends Response{
     private final String type = "Bearer ";
     private String accessToken;
     private String refreshToken;
-    private final String response = OK_RESP;
+    private final String response = Response.OK_RESP;
 
 }

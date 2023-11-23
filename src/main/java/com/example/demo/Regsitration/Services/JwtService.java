@@ -53,8 +53,8 @@ public class JwtService {
 
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 120000))
-                //.setExpiration(new Date(System.currentTimeMillis() + 300000))//5 minutes access token live
+                //.setExpiration(new Date(System.currentTimeMillis() + 120000))
+                .setExpiration(new Date(System.currentTimeMillis() + 300000))//5 minutes access token live
                 .signWith(getSignKey(SECRET_1), SignatureAlgorithm.HS256)
                 .compact();
 
@@ -106,8 +106,8 @@ public class JwtService {
 
         return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 300000))
-                //.setExpiration(new Date(System.currentTimeMillis() + 2505600000L))//29 days token life
+                //.setExpiration(new Date(System.currentTimeMillis() + 300000))
+                .setExpiration(new Date(System.currentTimeMillis() + 2505600000L))//29 days token life
                 .signWith(getSignKey(SECRET_2), SignatureAlgorithm.HS256)
                 .compact();
 
