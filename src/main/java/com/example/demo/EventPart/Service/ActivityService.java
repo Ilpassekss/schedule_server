@@ -3,7 +3,6 @@ package com.example.demo.EventPart.Service;
 import com.example.demo.EventPart.Controller.Responses.*;
 import com.example.demo.EventPart.Entities.Event;
 import com.example.demo.EventPart.Repos.EventRepo;
-import com.example.demo.EventPart.RequestForms.EventIDRequest;
 import com.example.demo.EventPart.RequestForms.EventRequest;
 import lombok.RequiredArgsConstructor;
 
@@ -11,6 +10,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +22,7 @@ public class ActivityService {
     private final EventRepo eventRepo;
 
     //add event into mongo db
+
     public ActivityResponses addEvent(EventRequest eventRequest, String userID) {
 
         LocalDateTime eventStartTime = Event.parseStringToLocalDateTime(eventRequest.getDate(), eventRequest.getStartTime());
@@ -30,16 +31,21 @@ public class ActivityService {
 
 
         if(eventStartTime.isAfter(eventFinishTime)){
-            return new ProblemResponse("event start time can not be before finish time");
+
+            return  new BadResponse("Event start time(" + eventStartTime.toString()
+                    + ") is after this event finish");
         } else if (eventDay.isBefore(LocalDateTime.now())) {
-            return new ProblemResponse("you can not create events in past time");
+
+            return new BadResponse("You can not create events for the past time. Event date :"
+                    + eventDay.toString() + " . Local date: " + LocalDate.now().toString());
         }
 
-
+        //here i have to add multithreading
         for(Event event : eventRepo.findAllByDateAndUserID(eventDay, userID).get()){
 
             if(event.checkTime(event.getStartTime(), event.getFinishTime(), eventStartTime, eventFinishTime)){
-               return new ProblemResponse("You have events in the same time");
+
+                return new BadResponse("You have event at the same time");
             }
 
         }
@@ -57,7 +63,9 @@ public class ActivityService {
 
         eventRepo.save(event);
 
-        return new AddResponse();
+
+
+        return new GoodResponse("You added new activity");
     }
 
     //get All user events
@@ -88,7 +96,6 @@ public class ActivityService {
 
         List<EventResponse> eventResponses = new ArrayList<>();
 
-
         for(Event event : eventRepo.findAllByDateAndUserID(LocalDateTime.parse(date), userID).get() ){
 
             eventResponses.add(EventResponse.builder()
@@ -106,18 +113,16 @@ public class ActivityService {
     }
 
     //delete event bu eventID
-    public DeleteResponse deleteEvent(String userID, String id){
+    public ActivityResponses deleteEvent(String userID, String id){
 
         eventRepo.deleteByIdAndUserID(id, userID);
 
-        return DeleteResponse.builder()
-                .userID("Activity with ID: " + id + " was deleted")
-                .build();
+        return new GoodResponse("Event was deleted successful");
     }
 
-    public ActivityResponses setNonActive(EventIDRequest eventIDRequest, String userID){
+    public ActivityResponses setNonActive(String eventIDRequest, String userID){
 
-        Event event = eventRepo.findByUserIDAndId(userID, eventIDRequest.getEventID()).get();
+        Event event = eventRepo.findByUserIDAndId(userID, eventIDRequest).get();
 
         if(event.getActive()){
 
@@ -125,11 +130,9 @@ public class ActivityService {
 
             eventRepo.save(event);
 
-            return new AddResponse();
+            return new GoodResponse("Event finished successful");
         }else {
-
-
-            return new ProblemResponse("Event " + eventIDRequest.getEventID() + " already finished");
+            return new BadResponse("Event " + eventIDRequest + " already finished");
         }
     }
 
@@ -147,10 +150,6 @@ public class ActivityService {
 
                 eventRepo.save(event);
             }
-
-
         }
-
-
     }
 }

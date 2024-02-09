@@ -1,7 +1,6 @@
 package com.example.demo;
 
 import com.example.demo.EventPart.Controller.Responses.ActivityResponses;
-import com.example.demo.EventPart.Controller.Responses.AddResponse;
 import com.example.demo.EventPart.Entities.Event;
 import com.example.demo.EventPart.Repos.EventRepo;
 import com.example.demo.EventPart.RequestForms.EventRequest;
@@ -11,8 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
